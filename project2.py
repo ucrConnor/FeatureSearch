@@ -129,10 +129,12 @@ def open_file(path = "smalldata/CS170_SMALLtestdata__1.txt"):
 
 search = ""
 file_path = ""
+stop = False
 if len(sys.argv) > 1:
     search = sys.argv[1]
     if len(sys.argv) == 3:
         file_path = sys.argv[2]
+        stop = True
 while True:
     if not file_path:
         file_path = input("Enter the dataset you want to run.\n\n")
@@ -160,3 +162,5 @@ while True:
     elif search == 5:
         break
     search = ""
+    if stop:
+        break

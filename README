@@ -1,0 +1,1 @@
+py -u .\project2.py 1 largedata/CS170_LARGEtestdata__120.txt 2>&1 |  tee large_set_120_forward_Search.txt
