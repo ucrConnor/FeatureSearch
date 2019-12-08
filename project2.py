@@ -1,6 +1,8 @@
 from random import uniform
 from math import sqrt
 from operator import itemgetter
+from timeit import default_timer
+import sys
 
 def calc_distance(instance1, instance2, features):
     sum = 0
@@ -33,10 +35,8 @@ def cross_validation(data, current_features, added_feature, method = "add"):
 
 
 
-def forward_search():
-    with open("smalldata/CS170_SMALLtestdata__1.txt", "r") as f:
-        data = [line.split() for line in f.readlines()]
-    f.close
+def forward_search(data):
+
     features_accuracy_at_each_level = []
     current_features = []
 
@@ -64,10 +64,8 @@ def forward_search():
             best_features = (features, accuracy)
     print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
 
-def backward_search():
-    with open("smalldata/CS170_SMALLtestdata__1.txt", "r") as f:
-        data = [line.split() for line in f.readlines()]
-    f.close
+def backward_search(data):
+
     features_accuracy_at_each_level = []
     current_features = [num for num in range(1,len(data[0]))]
     #print(current_features)
@@ -96,10 +94,8 @@ def backward_search():
     print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
 
 
-def iterative_deepening():
-    with open("data/CS170_SMALLtestdata__1.txt", "r") as f:
-        data = [line.split() for line in f.readlines()]
-    f.close
+def combinational_search(data):
+
     best_of_one_feature = ([],0)
     print("Checking all single features")
     for i in range(1,len(data[0])):
@@ -124,6 +120,43 @@ def iterative_deepening():
     best_features = max([best_of_one_feature, best_of_two_features], key=itemgetter(1))
     print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
 
-#forward_search()
-#backward_search()
-iterative_deepening()
+
+def open_file(path = "smalldata/CS170_SMALLtestdata__1.txt"):
+    with open(path, "r") as f:
+        data = [line.split() for line in f.readlines()]
+    f.close
+    return data
+
+search = ""
+file_path = ""
+if len(sys.argv) > 1:
+    search = sys.argv[1]
+    if len(sys.argv) == 3:
+        file_path = sys.argv[2]
+while True:
+    if not file_path:
+        file_path = input("Enter the dataset you want to run.\n\n")
+    data = open_file(file_path)
+    if not search:
+        search = input("""Enter the number to select the function\n\t 1: Forward Search\n\t 2: Backwards Search\n\t 3: Combinational Search\n\t 4: Change File\n\t 5: Exit\n""")
+    search = int(search)
+    if search == 1:
+        start = default_timer()
+        forward_search(data)
+        end = default_timer()
+        print(f"\nForward Search time: {end - start} seconds\n")
+    elif search == 2:
+        start = default_timer()
+        backward_search(data)
+        end = default_timer()
+        print(f"\nBackward Search time: {end - start} seconds\n")
+    elif search == 3:
+        start = default_timer()
+        combinational_search(data)
+        end = default_timer()
+        print(f"\nCombinational Search time: {end - start} seconds\n")
+    elif search == 4:
+        print("\nChanged File")
+    elif search == 5:
+        break
+    search = ""
