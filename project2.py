@@ -8,9 +8,12 @@ def calc_distance(instance1, instance2, features):
     distance = sqrt(sum)
     return distance
 
-def cross_validation(data, current_features, added_feature):
+def cross_validation(data, current_features, added_feature, method = "add"):
     features = current_features.copy()
-    features.append(added_feature)
+    if method == "add":
+        features.append(added_feature)
+    elif method == "remove":
+        features.remove(added_feature)
     correct_classifications = 0
     for i in range (len(data)):
         nearest_neighbor = data[i-1]
@@ -28,7 +31,7 @@ def cross_validation(data, current_features, added_feature):
 
 
 
-def search():
+def forward_search():
     with open("smalldata/CS170_SMALLtestdata__1.txt", "r") as f:
         data = [line.split() for line in f.readlines()]
     f.close
@@ -59,4 +62,36 @@ def search():
             best_features = (features, accuracy)
     print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
 
-search()
+def backward_search():
+    with open("smalldata/CS170_SMALLtestdata__1.txt", "r") as f:
+        data = [line.split() for line in f.readlines()]
+    f.close
+    features_accuracy_at_each_level = []
+    current_features = [num for num in range(1,len(data[0]))]
+    #print(current_features)
+    for i in range(len(data[0])-1,0,-1):
+        print(f"Currently in level {i}")
+        remove_feature = []
+        highest_accuracy = 0
+        for j in range(len(data[0]),0,-1):
+            if j in current_features:
+                accuracy = cross_validation(data,current_features, j, method="remove")
+                print(f"\tConsidering removing feature {j}: {accuracy}")
+                
+
+                if accuracy > highest_accuracy:
+                    highest_accuracy = accuracy
+                    remove_feature = j
+        current_features.remove(remove_feature)
+        features_accuracy_at_each_level.append((current_features.copy(),highest_accuracy))
+        print(f"Level {i}: removed {remove_feature} from feature set")
+
+    best_features = features_accuracy_at_each_level[0]
+    for features, accuracy in features_accuracy_at_each_level:
+        #print(f"{features}: {accuracy}")
+        if accuracy > best_features[1]:
+            best_features = (features, accuracy)
+    print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
+
+#forward_search()
+backward_search()
