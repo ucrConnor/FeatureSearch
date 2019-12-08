@@ -1,5 +1,6 @@
 from random import uniform
 from math import sqrt
+from operator import itemgetter
 
 def calc_distance(instance1, instance2, features):
     sum = 0
@@ -10,10 +11,11 @@ def calc_distance(instance1, instance2, features):
 
 def cross_validation(data, current_features, added_feature, method = "add"):
     features = current_features.copy()
-    if method == "add":
-        features.append(added_feature)
-    elif method == "remove":
-        features.remove(added_feature)
+    if added_feature != 0:
+        if method == "add":
+            features.append(added_feature)
+        elif method == "remove":
+            features.remove(added_feature)
     correct_classifications = 0
     for i in range (len(data)):
         nearest_neighbor = data[i-1]
@@ -93,5 +95,35 @@ def backward_search():
             best_features = (features, accuracy)
     print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
 
+
+def iterative_deepening():
+    with open("data/CS170_SMALLtestdata__1.txt", "r") as f:
+        data = [line.split() for line in f.readlines()]
+    f.close
+    best_of_one_feature = ([],0)
+    print("Checking all single features")
+    for i in range(1,len(data[0])):
+        accuracy = cross_validation(data,[i], 0)
+        if accuracy > best_of_one_feature[1]:
+            best_of_one_feature = ([i],accuracy)
+        print(f"\tChecking Feature {i}: {accuracy}")
+
+    best_of_two_features = ([],0) 
+    print("Checking all combinations of two features")
+    for i in range(1,len(data[0])):
+        for j in range(1,len(data[0])):
+            if i != j:    
+                features = [i,j]
+                accuracy = cross_validation(data,features, 0)
+                if accuracy > best_of_two_features[1]:
+                    best_of_two_features = (features,accuracy)
+                print(f"\tChecking Feature {features}: {accuracy}")
+    
+    #print(best_of_one_feature)
+    #print(best_of_two_features)
+    best_features = max([best_of_one_feature, best_of_two_features], key=itemgetter(1))
+    print(f"The best feature set is {best_features[0]} with an accuracy of {best_features[1]}")
+
 #forward_search()
-backward_search()
+#backward_search()
+iterative_deepening()
