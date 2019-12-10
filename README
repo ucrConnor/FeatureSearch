@@ -1,1 +1,8 @@
 py -u .\project2.py 1 largedata/CS170_LARGEtestdata__120.txt 2>&1 |  tee large_set_120_forward_Search.txt
+
+Read Profile in python shell
+
+import pstats
+p = pstats.Stats('profile_dump')
+# skip strip_dirs() if you want to see full path's
+p.strip_dirs().print_stats()

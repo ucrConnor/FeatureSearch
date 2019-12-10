@@ -2,6 +2,7 @@ from random import uniform
 from math import sqrt
 from operator import itemgetter
 from timeit import default_timer
+import cProfile
 import sys
 
 def calc_distance(instance1, instance2, features):
@@ -143,20 +144,30 @@ while True:
         search = input("""Enter the number to select the function\n\t 1: Forward Search\n\t 2: Backwards Search\n\t 3: Combinational Search\n\t 4: Change File\n\t 5: Exit\n""")
     search = int(search)
     if search == 1:
-        start = default_timer()
+        profile = cProfile.Profile()
+        profile.enable()
         forward_search(data)
-        end = default_timer()
-        print(f"\nForward Search time: {end - start} seconds\n")
+        profile.disable()
+        path = f"{file_path[:-4]}_forward_search"
+        profile.dump_stats(path)
+        #print(f"\nForward Search time: {end - start} seconds\n")
     elif search == 2:
-        start = default_timer()
+        profile = cProfile.Profile()
+        profile.enable()
         backward_search(data)
-        end = default_timer()
-        print(f"\nBackward Search time: {end - start} seconds\n")
+        profile.disable()
+        path = f"{file_path[:-4]}_backward_search"
+        profile.dump_stats(path)
+        #print(f"\nBackward Search time: {end - start} seconds\n")
     elif search == 3:
         start = default_timer()
+        profile = cProfile.Profile()
+        profile.enable()
         combinational_search(data)
-        end = default_timer()
-        print(f"\nCombinational Search time: {end - start} seconds\n")
+        profile.disable()
+        path = f"{file_path[:-4]}_combin_search"
+        profile.dump_stats(path)
+        #print(f"\nCombinational Search time: {end - start} seconds\n")
     elif search == 4:
         print("\nChanged File")
     elif search == 5:
