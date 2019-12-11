@@ -144,32 +144,32 @@ while True:
         search = input("""Enter the number to select the function\n\t 1: Forward Search\n\t 2: Backwards Search\n\t 3: Combinational Search\n\t 4: Change File\n\t 5: Exit\n""")
     search = int(search)
     if search == 1:
-        profile = cProfile.Profile()
-        profile.enable()
+        profile1 = cProfile.Profile()
+        profile1.enable()
         forward_search(data)
-        profile.disable()
+        profile1.disable()
         path = f"{file_path[:-4]}_forward_search"
-        profile.dump_stats(path)
+        profile1.dump_stats(path)
         #print(f"\nForward Search time: {end - start} seconds\n")
     elif search == 2:
-        profile = cProfile.Profile()
-        profile.enable()
+        profile2 = cProfile.Profile()
+        profile2.enable()
         backward_search(data)
-        profile.disable()
+        profile2.disable()
         path = f"{file_path[:-4]}_backward_search"
-        profile.dump_stats(path)
+        profile2.dump_stats(path)
         #print(f"\nBackward Search time: {end - start} seconds\n")
     elif search == 3:
         start = default_timer()
-        profile = cProfile.Profile()
-        profile.enable()
+        profile3 = cProfile.Profile()
+        profile3.enable()
         combinational_search(data)
-        profile.disable()
+        profile3.disable()
         path = f"{file_path[:-4]}_combin_search"
-        profile.dump_stats(path)
+        profile3.dump_stats(path)
         #print(f"\nCombinational Search time: {end - start} seconds\n")
     elif search == 4:
-        print("\nChanged File")
+        file_path = input("Enter the dataset you want to run.\n\n")
     elif search == 5:
         break
     search = ""
